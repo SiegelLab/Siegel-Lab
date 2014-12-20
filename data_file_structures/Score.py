@@ -20,15 +20,21 @@ class ScoreFile(DataFrame):
             if (findall("constraint",i)):
                 if (i.split("_")[0] != "if"):
                     self.constraint_terms_found.append(i)
-                    
+
         print "Found the following terms %s " %self.constraint_terms_found
+        print "Creating a new column called total_score_no_csts "
+
+        #start the new column with the total score, then subtract off the cst column values
+        self["total_score_no_csts"]=self["total_score"]
+        for i in self.constraint_terms_found:
+            self["total_score_no_csts"] -= self[i]
 
 def test():
     data = read_csv(file,delim_whitespace=True,header=1)
     sf2 = ScoreFile(data)
 
-    print "Created a scorefile2 class "
-    print sf2
-    sf2.check_for_cst_energies()
+    print "Created a scorefile class "
 
+    sf2.check_for_cst_energies()
+    print sf2
 test()
